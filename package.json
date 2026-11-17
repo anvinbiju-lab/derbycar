@@ -1,1 +1,1 @@
-{"name":"derby-premium","version":"1.0.0","private":true,"scripts":{"dev":"node server.mjs","check":"node --check dist/app.js"}}
+{"name":"derby-premium","version":"1.1.0","private":true,"scripts":{"dev":"node server.mjs","check":"node --check dist/app.js && node --check dist/motion.js && node --check dist/experience.js"}}
