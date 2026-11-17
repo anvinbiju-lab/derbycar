@@ -1,0 +1,57 @@
+/* A restrained motion system: no scroll hijacking, no layout-dependent hero effects. */
+:root{--ease-premium:cubic-bezier(.22,1,.36,1)}
+.header{position:sticky;top:0;transition:background .4s,box-shadow .4s}
+.header.scrolled{background:rgba(248,247,243,.96);box-shadow:0 4px 24px #16281c0c;backdrop-filter:blur(14px)}
+.reading-progress{position:absolute;bottom:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,#8b9f83,#d7b77c);transform:scaleX(0);transform-origin:left;pointer-events:none}
+.hero-picture{transform:translate3d(var(--hero-x,0px),var(--hero-y,0px),0) scale(1.035)}
+.hero h1{animation:headline-arrive 1.25s var(--ease-premium) .14s both}
+.hero h1 em{display:inline-block;position:relative}
+.hero h1 em:after{content:'';position:absolute;bottom:-.07em;left:3%;width:95%;height:1px;background:linear-gradient(90deg,transparent,#e6cda0b3,transparent);transform-origin:left;animation:signature-line 1.25s var(--ease-premium) 1s both}
+.hero-content>.hero-description{animation-duration:1.1s;animation-timing-function:var(--ease-premium)}
+.hero-ctas{animation-delay:.45s;animation-duration:1.1s;animation-timing-function:var(--ease-premium)}
+.hero-proof{animation-delay:.65s;animation-duration:1.1s;animation-timing-function:var(--ease-premium)}
+.hero-location{animation:enter 1.2s var(--ease-premium) .85s both}
+.button{position:relative;isolation:isolate;overflow:hidden;transition:background .3s,transform .45s var(--ease-premium),box-shadow .45s;translate:var(--magnet-x,0px) var(--magnet-y,0px)}
+.button:before{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(110deg,transparent 20%,#fff3 48%,transparent 70%);transform:translateX(-125%);transition:transform .85s var(--ease-premium);pointer-events:none}
+.button:hover:before,.button:focus-visible:before{transform:translateX(125%)}
+.button>span,.card-top>span,.card-link>span{display:inline-block;transition:transform .45s var(--ease-premium)}
+.button:hover>span,.button:focus-visible>span,.service-card:hover .card-top>span,.service-card:focus-visible .card-top>span{transform:translate(3px,-3px)}
+.service-card:hover .card-link>span{transform:translateX(5px)}
+.service-card{position:relative;isolation:isolate;transition:transform .65s var(--ease-premium),box-shadow .65s,opacity .8s}
+.service-card:before{content:'';position:absolute;inset:0;pointer-events:none;z-index:-1;background:radial-gradient(280px circle at var(--shine-x,50%) var(--shine-y,0%),#ffffff24,transparent 75%);opacity:0;transition:opacity .5s}
+.service-card:hover:before{opacity:1}
+.service-card:hover{transform:perspective(1200px) translateY(-7px) rotateX(var(--tilt-x,0deg)) rotateY(var(--tilt-y,0deg));box-shadow:0 22px 40px #203b231a}
+.reveal{transition:opacity .95s var(--ease-premium),transform .95s var(--ease-premium)}
+.js-motion .reveal:not(.visible){transform:translateY(32px)}
+.section-heading.visible h2,.experience-copy.visible h2,.airport-copy.visible h2{animation:headline-arrive 1s var(--ease-premium) both}
+.section-heading.visible>p,.experience-copy.visible>.experience-point{animation:enter 1s var(--ease-premium) .12s both}
+.experience-copy.visible>.experience-point:nth-of-type(2){animation-delay:.22s}
+.experience-image img{transition:transform 1.5s var(--ease-premium)}
+.experience-image:hover img{transform:scale(1.055)}
+.trip-switch{position:relative;isolation:isolate}
+.trip-switch:before{content:'';position:absolute;left:4px;top:4px;bottom:4px;width:calc(50% - 6px);background:#fff;border-radius:2px;box-shadow:0 1px 5px #0001;transition:transform .45s var(--ease-premium);z-index:-1}
+.trip-switch:has([data-trip="return"].active):before{transform:translateX(calc(100% + 4px))}
+.trip-switch button{min-width:95px}.trip-switch button.active{background:transparent;box-shadow:none}
+.field{transition:background .25s,box-shadow .25s}.field:focus-within{background:#f5f6ef;box-shadow:inset 0 -2px #aa956f}
+.return-field:not([hidden]){animation:enter .4s var(--ease-premium) both}
+.airport-options button{transition:background .3s,color .3s,border-color .3s,transform .35s var(--ease-premium)}
+.airport-options button:hover{transform:translateY(-2px)}
+.route-board{transition:box-shadow .6s var(--ease-premium),transform .6s var(--ease-premium)}
+.route-board:hover{transform:translateY(-3px);box-shadow:13px 13px 0 #dae0d2}
+.faq-list summary span{transition:transform .35s var(--ease-premium)}
+.faq-list details{transition:border-color .35s}.faq-list details[open]{border-color:#a9b59d}
+.faq-list summary{transition:color .25s}.faq-list summary:hover{color:#8c713e}
+dialog[open]{animation:dialog-arrive .45s var(--ease-premium) both}
+dialog[open]::backdrop{animation:backdrop-arrive .3s ease both}
+.menu-toggle span{transition:transform .35s var(--ease-premium)}
+.menu-toggle[aria-expanded="true"] span:first-child{transform:translateY(3.5px) rotate(45deg)}
+.menu-toggle[aria-expanded="true"] span:last-child{transform:translateY(-3.5px) rotate(-45deg)}
+.navigation.open{animation:menu-arrive .4s var(--ease-premium) both}
+.navigation.open a{animation:enter .45s var(--ease-premium) both}.navigation.open a:nth-child(2){animation-delay:.04s}.navigation.open a:nth-child(3){animation-delay:.08s}.navigation.open a:nth-child(4){animation-delay:.12s}
+@keyframes headline-arrive{from{opacity:0;transform:translateY(28px);clip-path:inset(0 0 100% 0)}to{opacity:1;transform:translateY(0);clip-path:inset(-10% -10% -15% -10%)}}
+@keyframes signature-line{from{transform:scaleX(0);opacity:0}to{transform:scaleX(1);opacity:1}}
+@keyframes dialog-arrive{from{opacity:0;transform:translateY(25px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes backdrop-arrive{from{opacity:0}to{opacity:1}}
+@keyframes menu-arrive{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:800px){.hero-picture{transform:scale(1.02)}.trip-switch button{min-width:0;flex:1}.trip-switch{min-width:180px}.header.scrolled{backdrop-filter:none}}
+@media(prefers-reduced-motion:reduce){.hero-picture{transform:none}.button{translate:none!important}.service-card:hover{transform:none}.hero h1,.section-heading.visible h2,.experience-copy.visible h2,.airport-copy.visible h2{clip-path:none}.reading-progress{display:none}.hero h1 em:after{animation:none}.header{backdrop-filter:none}}

@@ -63,8 +63,18 @@ $('#journey-form').addEventListener('submit', event => {
 });
 $('#destination').addEventListener('input',()=>$('#destination').setCustomValidity(''));
 $('#pickup').addEventListener('input',()=>$('#destination').setCustomValidity(''));
-$$('.dialog-close').forEach(button=>button.addEventListener('click',()=>button.closest('dialog').close()));
-$$('dialog').forEach(dialog=>dialog.addEventListener('click',event=>{ if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close();} }));
+function closeDialog(dialog) {
+  if (dialog.dataset.closing) return;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { dialog.close(); return; }
+  dialog.dataset.closing='true';
+  const animation=dialog.animate([{opacity:1,transform:'translateY(0) scale(1)'},{opacity:0,transform:'translateY(12px) scale(.98)'}],{duration:180,easing:'ease-in'});
+  animation.finished.then(()=>{dialog.close();delete dialog.dataset.closing;}).catch(()=>{dialog.close();delete dialog.dataset.closing;});
+}
+$$('.dialog-close').forEach(button=>button.addEventListener('click',()=>closeDialog(button.closest('dialog'))));
+$$('dialog').forEach(dialog=>{
+  dialog.addEventListener('cancel',event=>{event.preventDefault();closeDialog(dialog);});
+  dialog.addEventListener('click',event=>{ if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)closeDialog(dialog);} });
+});
 $('.privacy-button').addEventListener('click',()=>$('#privacy-dialog').showModal());
 $('#details-form').addEventListener('submit',event=>{
   event.preventDefault();const data=new FormData(event.currentTarget);
@@ -77,8 +87,3 @@ $('#copy-enquiry').addEventListener('click',async()=>{
   try { await navigator.clipboard.writeText(enquiry); $('#email-status').textContent='Enquiry copied. Paste it into an email to info@derbyminibusandcars.co.uk.'; }
   catch { $('#email-status').textContent=enquiry; $('#email-status').style.whiteSpace='pre-wrap'; }
 });
-if(!reducedMotion && matchMedia('(pointer:fine)').matches){
-  const hero=$('.hero');let pending=false;
-  hero.addEventListener('pointermove',event=>{ if(pending)return;pending=true;requestAnimationFrame(()=>{const rect=hero.getBoundingClientRect();const x=(event.clientX-rect.left)/rect.width-.5;const y=(event.clientY-rect.top)/rect.height-.5;$('.hero-picture').style.transform=`translate(${x*-6}px,${y*-4}px) scale(1.015)`;pending=false;}); });
-  hero.addEventListener('pointerleave',()=>{$('.hero-picture').style.transform='none';});
-}
